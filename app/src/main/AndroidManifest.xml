@@ -24,7 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StingsListActivity"></activity>
+        <activity
+            android:name=".StingsListActivity"
+            android:label="@string/title_activity_stings_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

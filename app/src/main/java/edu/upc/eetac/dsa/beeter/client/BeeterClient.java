@@ -79,4 +79,16 @@ public class BeeterClient {
         }
         return null;
     }
+
+    public String getStings(String uri) throws BeeterClientException {
+        if(uri==null){
+            uri = getLink(authToken.getLinks(), "current-stings").getUri().toString();
+        }
+        WebTarget target = client.target(uri);
+        Response response = target.request().get();
+        if (response.getStatus() == Response.Status.OK.getStatusCode())
+            return response.readEntity(String.class);
+        else
+            throw new BeeterClientException(response.readEntity(String.class));
+    }
 }
