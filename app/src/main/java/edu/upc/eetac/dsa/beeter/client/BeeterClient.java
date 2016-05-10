@@ -12,6 +12,7 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
@@ -80,6 +81,15 @@ public class BeeterClient {
         return null;
     }
 
+    public String getSting(String uri) throws BeeterClientException {
+        WebTarget target = client.target(uri);
+        Response response = target.request().get();
+        if (response.getStatus() == Response.Status.OK.getStatusCode())
+            return response.readEntity(String.class);
+        else
+            throw new BeeterClientException(response.readEntity(String.class));
+    }
+
     public String getStings(String uri) throws BeeterClientException {
         if(uri==null){
             uri = getLink(authToken.getLinks(), "current-stings").getUri().toString();
@@ -91,4 +101,19 @@ public class BeeterClient {
         else
             throw new BeeterClientException(response.readEntity(String.class));
     }
+
+    public boolean CreateSting(Form form) throws BeeterClientException {
+
+        String token = authToken.getToken();
+        String uri = getLink(authToken.getLinks(), "create-sting").getUri().toString();
+        WebTarget target = client.target(uri);
+        Invocation.Builder builder = target.request().header("X-Auth-Token", token);
+        Response response = builder.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+        if (response.getStatus() == Response.Status.CREATED.getStatusCode())
+            return true;
+        else
+            return false;
+    }
+
+
 }

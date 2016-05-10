@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -37,6 +38,21 @@ public class StingsListActivity extends AppCompatActivity {
             this.stingCollection = stingCollection;
         }
 
+        class ViewHolder{
+            TextView textViewCreator;
+            TextView textViewSubject;
+            TextView textViewDate;
+
+            ViewHolder(View row){
+                this.textViewCreator = (TextView) row
+                        .findViewById(R.id.textViewCreator);
+                this.textViewSubject = (TextView) row
+                        .findViewById(R.id.textViewSubject);
+                this.textViewDate = (TextView) row
+                        .findViewById(R.id.textViewDate);
+            }
+        }
+
         @Override
         public int getCount() {
             return stingCollection.getStings().size();
@@ -54,7 +70,24 @@ public class StingsListActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.list_row_data, null);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            String userid = stingCollection.getStings().get(position).getUserid();
+            String subject = stingCollection.getStings().get(position).getSubject();
+            Long date = stingCollection.getStings().get(position).getCreationTimestamp();
+            String sdate = String.valueOf(date);
+
+            viewHolder.textViewCreator.setText(userid);
+            viewHolder.textViewSubject.setText(subject);
+            viewHolder.textViewDate.setText(sdate);
+            return convertView;
         }
     }
 
